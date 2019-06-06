@@ -3,13 +3,29 @@ const random = require('random')
 
 const prob = 493163
 
-
+var bet = 1
+var total = 100
+const max = 8
 
 function receiveData(data) {
   for (var i = 0; i < sockets.length; i++) {
     const rand = random.int(0, 1000000)
     const wl = rand < prob ? 'W' : 'L'
-    sockets[i].write('|' + rand + '|' + wl + '|');
+
+    if (wl == 'L')
+    {
+      total -= bet
+      bet = 1
+    }
+    else {
+      total += bet
+      bet = bet * 2 + 1
+
+      if (bet > max) 
+        bet = 1
+    }
+    
+    sockets[i].write('|' + rand + '|' + wl + '|' + total + '|'); 
 
   }
 }
